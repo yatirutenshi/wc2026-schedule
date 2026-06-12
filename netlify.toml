@@ -1,0 +1,5 @@
+# matches.json だけが変更されたコミットではデプロイをスキップする
+# （結果データはサイト側がGitHubから直接読むため、Netlifyの再デプロイが不要）
+# ignoreコマンドが終了コード0を返すとビルドはスキップされる
+[build]
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)matches.json'"

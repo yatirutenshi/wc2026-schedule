@@ -655,22 +655,31 @@ render();
 setInterval(render, 60000);
 
 // ===== 自動更新データの読み込み =====
-// GitHub Actionsが更新する matches.json があればそちらを優先表示。
-// 取得失敗時（ローカルで開いた場合など）はHTML埋め込みデータのまま動く。
-fetch("matches.json?ts=" + Date.now())
-  .then(r => r.ok ? r.json() : null)
-  .then(d => {
-    if(!d || !Array.isArray(d.matches) || d.matches.length === 0) return;
-    M = d.matches;
-    if(d.updatedAt){
-      const t = new Date(d.updatedAt);
-      const pad = n => String(n).padStart(2,"0");
-      const el = document.getElementById("updatedAt");
-      if(el) el.textContent = `結果データ最終更新: ${t.getMonth()+1}/${t.getDate()} ${pad(t.getHours())}:${pad(t.getMinutes())}（日本時間はお使いの端末の時刻設定に依存）`;
-    }
-    render();
-  })
-  .catch(()=>{});
+// GitHub上のmatches.jsonを直接読む（Netlifyの再デプロイ不要でデータが更新される）。
+// 取得失敗時はNetlify上のコピー → HTML埋め込みデータの順にフォールバック。
+(async function loadData(){
+  const sources = [
+    "https://raw.githubusercontent.com/yatirutenshi/wc2026-schedule/main/matches.json?ts=" + Date.now(),
+    "matches.json?ts=" + Date.now()
+  ];
+  for(const src of sources){
+    try{
+      const r = await fetch(src);
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(!d || !Array.isArray(d.matches) || d.matches.length === 0) continue;
+      M = d.matches;
+      if(d.updatedAt){
+        const t = new Date(d.updatedAt);
+        const pad = n => String(n).padStart(2,"0");
+        const el = document.getElementById("updatedAt");
+        if(el) el.textContent = `結果データ最終更新: ${t.getMonth()+1}/${t.getDate()} ${pad(t.getHours())}:${pad(t.getMinutes())}（日本時間はお使いの端末の時刻設定に依存）`;
+      }
+      render();
+      return;
+    }catch(e){}
+  }
+})();
 </script>
 </body>
 </html>
