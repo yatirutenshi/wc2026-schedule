@@ -25,7 +25,7 @@ jobs:
       - name: Update matches.json
         run: node scripts/update-results.mjs
         env:
-          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
 
       - name: Commit and push if changed
         run: |
