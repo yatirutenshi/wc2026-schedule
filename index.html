@@ -252,8 +252,16 @@ h1 small{display:block;font-weight:700;font-size:.45em;letter-spacing:.18em;opac
   padding:50px 0;
 }
 
-/* ===== View tabs（日程／順位） ===== */
-.viewtabs{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:4px}
+/* ===== FIFAランクバッジ ===== */
+.rank{
+  font-family:'Oswald';font-weight:600;font-size:10px;letter-spacing:.02em;
+  color:var(--ink-soft);background:#EBEFEC;border-radius:4px;padding:1px 5px;
+  margin-left:6px;vertical-align:middle;white-space:nowrap;
+}
+.match.jp .rank{background:rgba(255,255,255,.18);color:rgba(255,255,255,.9)}
+.sttable td.team .rank{margin-left:7px}
+
+/* ===== View tabs（日程／順位） ===== */.viewtabs{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:4px}
 .viewtab{
   flex:1;border:none;background:transparent;cursor:pointer;
   font-family:'Zen Kaku Gothic New';font-weight:700;font-size:14px;color:var(--ink-soft);
@@ -407,7 +415,8 @@ h1 small{display:block;font-weight:700;font-size:.45em;letter-spacing:.18em;opac
     <div class="st-intro">
       各グループの順位は試合結果から自動計算しています。並び順は <b>勝点 → 得失点差 → 総得点</b> の順。
       <b class="q">上位2チーム</b>が決勝トーナメント進出、<b class="q3">各組3位</b>のうち成績上位8チームも進出します。
-      （勝点等が完全に並んだ場合の細かい順位は当該チーム間の直接対決などで決まるため、表示順と前後することがあります）
+      （勝点等が完全に並んだ場合の細かい順位は当該チーム間の直接対決などで決まるため、表示順と前後することがあります）<br>
+      チーム名の横の「○位」は<b>FIFAランキング（2026年6月11日発表）</b>です。
     </div>
     <div class="standings" id="standingsList"></div>
   </div>
@@ -441,6 +450,21 @@ const GROUPS = {
   L:["イングランド","クロアチア","ガーナ","パナマ"]
 };
 const GC = {A:"--gA",B:"--gB",C:"--gC",D:"--gD",E:"--gE",F:"--gF",G:"--gG",H:"--gH",I:"--gI",J:"--gJ",K:"--gK",L:"--gL"};
+
+// FIFAランキング（2026年6月11日発表＝大会期間中はこの順位が有効）
+const RANK = {
+  "アルゼンチン":1,"スペイン":2,"フランス":3,"イングランド":4,"ポルトガル":5,"ブラジル":6,
+  "モロッコ":7,"オランダ":8,"ベルギー":9,"ドイツ":10,"クロアチア":11,"コロンビア":13,
+  "メキシコ":14,"セネガル":15,"ウルグアイ":16,"アメリカ":17,"日本":18,"スイス":19,
+  "イラン":20,"トルコ":22,"エクアドル":23,"オーストリア":24,"韓国":25,"オーストラリア":27,
+  "アルジェリア":28,"エジプト":29,"カナダ":30,"ノルウェー":31,"コートジボワール":33,"パナマ":34,
+  "スウェーデン":38,"チェコ":40,"パラグアイ":41,"スコットランド":42,"チュニジア":45,"DRコンゴ":46,
+  "ウズベキスタン":50,"カタール":56,"イラク":57,"南アフリカ":60,"サウジアラビア":61,"ヨルダン":63,
+  "ボスニア・ヘルツェゴビナ":64,"カーボベルデ":67,"ガーナ":73,"キュラソー":82,"ハイチ":83,"ニュージーランド":85
+};
+function rankTag(name){
+  return RANK[name] ? `<span class="rank">${RANK[name]}位</span>` : "";
+}
 
 // tv: N=NHK総合, T=日本テレビ, F=フジテレビ, B=NHK BS, 4=NHK BSP4K, D=DAZN
 // phase: 1/2/3 = グループ第n節, 32, 16, 8(準々), 4(準決), 3.5(3決), 0(決勝)
@@ -609,8 +633,9 @@ function parseWinner(score){
 function teamHTML(m){
   const score = m[9];
   const wrap = (n, win) => {
-    let h = n==="日本" ? `<span class="jp-name">日本</span>` : n;
-    return win ? `<span class="win">${h}</span>` : h;
+    let nm = n==="日本" ? `<span class="jp-name">日本</span>` : n;
+    const inner = win ? `<span class="win">${nm}</span>` : nm;
+    return inner + rankTag(n);
   };
   if(score){
     const w = parseWinner(score);
@@ -784,7 +809,7 @@ function renderStandings(){
       const name = t.team==="日本" ? "🇯🇵 日本" : t.team;
       rows += `<tr class="${cls}${jp}">
         <td class="pos"><span>${pos}</span></td>
-        <td class="team">${name}</td>
+        <td class="team">${name}${rankTag(t.team)}</td>
         <td>${t.pl}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td>
         <td class="gd">${gdStr}</td><td class="pts">${t.pts}</td>
       </tr>`;
@@ -823,10 +848,11 @@ function isRealTeam(name){
 function koTeamRow(name, sc, pk, res, isWin){
   const real = isRealTeam(name);
   const nm = name === "日本" ? '<span class="jp-name">日本</span>' : name;
+  const rk = real ? rankTag(name) : '';
   const cls = !real ? "placeholder" : (!res ? "" : (isWin ? "win" : "lose"));
   const mark = (res && isWin) ? '<span class="ko-win-mark"></span>' : '';
   const scHTML = res ? `<span class="ko-sc">${sc}${pk!=null?` <i>(${pk})</i>`:''}</span>` : '';
-  return `<div class="ko-team ${cls}"><span class="ko-name">${mark}${nm}</span>${scHTML}</div>`;
+  return `<div class="ko-team ${cls}"><span class="ko-name">${mark}${nm}${rk}</span>${scHTML}</div>`;
 }
 function renderBracket(){
   const wrap = document.getElementById("bracketList");
@@ -899,7 +925,7 @@ const lg = document.getElementById("legendGrid");
 Object.entries(GROUPS).forEach(([g, teams])=>{
   const div = document.createElement("div");
   div.className = "lg" + (g==="F"?" f-group":"");
-  const names = teams.map(t=>t==="日本"?`<b>🇯🇵 日本</b>`:t).join("・");
+  const names = teams.map(t=>(t==="日本"?`<b>🇯🇵 日本</b>`:t)+rankTag(t)).join("・");
   div.innerHTML = `<span class="gchip-s" style="background:var(${GC[g]})">${g}</span><span class="teams">${names}</span>`;
   lg.appendChild(div);
 });
