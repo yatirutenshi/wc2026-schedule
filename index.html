@@ -298,11 +298,11 @@ h1 small{display:block;font-weight:700;font-size:.45em;letter-spacing:.18em;opac
 .st-intro{font-size:12px;color:var(--ink-soft);line-height:1.7;margin:2px 2px 14px;padding:11px 14px;background:#fff;border:1px solid var(--line);border-radius:11px}
 .st-intro b.q{color:#2E7D32}.st-intro b.q3{color:#7A857F}
 
-/* ===== Bracket（決勝トーナメント） ===== */
-.bracket{margin-top:16px}
+/* ===== Bracket（決勝トーナメント・連結ブラケット） ===== */
+.bracket{margin-top:0}
 .champ{
   background:linear-gradient(135deg,#0A1E5E 0%,#1E50B5 100%);
-  border-radius:16px;padding:24px 20px;text-align:center;margin-bottom:18px;position:relative;overflow:hidden;
+  border-radius:16px;padding:24px 20px;text-align:center;margin:16px 0 14px;position:relative;overflow:hidden;
 }
 .champ::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% -30%,rgba(244,197,66,.22),transparent 55%);pointer-events:none}
 .champ.won{background:linear-gradient(135deg,#6E5200 0%,#C9A235 60%,#F4C542 100%)}
@@ -310,30 +310,47 @@ h1 small{display:block;font-weight:700;font-size:.45em;letter-spacing:.18em;opac
 .champ.won .champ-label{color:#1a1a1a}
 .champ-name{display:block;font-size:clamp(26px,7vw,36px);font-weight:900;color:#fff;position:relative;letter-spacing:.02em}
 .champ-pending{color:rgba(255,255,255,.65);font-size:13.5px;font-weight:700;position:relative}
-.ko-round-head{
-  margin:22px 0 8px;font-family:'Oswald';font-weight:500;font-size:13px;letter-spacing:.26em;
-  text-transform:uppercase;color:var(--ink-soft);display:flex;align-items:center;gap:12px;
+.bk-hint{text-align:center;font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:8px}
+
+.bracket-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px;margin:0 -16px;padding-left:16px;padding-right:16px}
+.bracket{display:flex;min-width:1180px;align-items:stretch}
+.bk-col{flex:1 1 0;display:flex;flex-direction:column;min-width:0}
+.bk-col-head{
+  font-family:'Oswald';font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);text-align:center;padding:6px 0 10px;position:sticky;top:0;
 }
-.ko-round-head::after{content:"";flex:1;height:1px;background:var(--line)}
-.ko-round-head b{font-family:'Zen Kaku Gothic New';font-weight:900;color:var(--ink);font-size:15px;letter-spacing:.04em}
-.ko-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:8px}
-.ko-card.has-jp{border-color:var(--jp-gold);box-shadow:0 0 0 1px var(--jp-gold);background:linear-gradient(180deg,rgba(244,197,66,.07),transparent)}
-.ko-card-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:6px}
-.ko-note{font-size:10px;font-weight:700;color:var(--jp-blue);background:#E8EEFB;border-radius:4px;padding:1px 7px}
-.ko-team{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:15px;font-weight:700}
-.ko-team + .ko-team{border-top:1px solid #EEF1EF}
-.ko-team.win .ko-name{color:var(--ink)}
-.ko-team.lose .ko-name{color:var(--ink-soft)}
-.ko-team.lose .ko-sc{color:var(--ink-soft)}
-.ko-name .jp-name{background:var(--jp-gold);color:var(--jp-deep);border-radius:5px;padding:1px 8px}
-.ko-team.placeholder{color:var(--ink-soft);font-weight:600;font-size:13.5px}
-.ko-sc{font-family:'Oswald';font-weight:700;font-size:19px;min-width:20px;text-align:right}
-.ko-team.win .ko-sc{color:#2E7D32}
-.ko-sc i{font-style:normal;font-size:11px;color:var(--ink-soft);font-weight:600}
-.ko-win-mark{display:inline-block;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid #2E7D32;margin-right:7px;vertical-align:middle}
-.ko-card.final{background:linear-gradient(180deg,#FFFDF6,#FFF6DF);border:2px solid var(--jp-gold);padding:15px}
-.ko-card.final .ko-team{font-size:17px}
-.ko-card.bronze{background:#FAFBFA}
+.bk-col-body{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:6px;padding:0 7px}
+.bk-col:first-child .bk-col-body{padding-left:0}
+.bk-col:first-child .bk-col-head{text-align:left;padding-left:2px}
+.bk-cell{display:flex;align-items:center;flex:1}
+.bk-match{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 9px;width:100%;position:relative;
+}
+/* 右へ伸びる接続線（決勝列以外） */
+.bk-col:not(.bk-col-0) .bk-match::after{
+  content:"";position:absolute;left:100%;top:50%;width:7px;height:2px;background:var(--rail);
+}
+.bk-match.jp{border-color:var(--jp-gold);box-shadow:0 0 0 1px var(--jp-gold);background:linear-gradient(180deg,rgba(244,197,66,.08),transparent)}
+.bk-match.final{background:linear-gradient(180deg,#FFFDF6,#FFF6DF);border:2px solid var(--jp-gold)}
+.bk-dt{display:block;font-size:9.5px;font-weight:700;color:var(--ink-soft);margin-bottom:5px;letter-spacing:.02em}
+.bk-team{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:3px 0;font-size:13px;font-weight:700;min-width:0}
+.bk-team + .bk-team{border-top:1px solid #EEF1EF}
+.bk-nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-team.win .bk-nm{color:var(--ink)}
+.bk-team.win{position:relative}
+.bk-team.lose .bk-nm{color:var(--ink-soft);opacity:.6}
+.bk-nm .jp-name{background:var(--jp-gold);color:var(--jp-deep);border-radius:4px;padding:0 6px}
+.bk-nm .ph{color:var(--ink-soft);font-weight:600;font-size:11.5px}
+.bk-sc{font-family:'Oswald';font-weight:700;font-size:15px;flex:0 0 auto}
+.bk-team.win .bk-sc{color:#2E7D32}
+.bk-team.lose .bk-sc{color:var(--ink-soft);opacity:.6}
+.bk-sc i{font-style:normal;font-size:9.5px;color:var(--ink-soft);margin-left:1px}
+.bk-team.win .bk-nm::before{content:"▸";color:#2E7D32;font-size:11px;margin-right:3px}
+.bk-match .rank{font-size:8.5px;padding:0 3px;margin-left:4px}
+
+.bk-third{margin-top:18px;max-width:320px}
+.bk-third-label{font-family:'Zen Kaku Gothic New';font-weight:900;font-size:13px;margin-bottom:8px;color:var(--ink)}
+.bk-match.bronze{background:#FAFBFA}
 
 /* ===== Jump button ===== */
 .jump{
@@ -827,8 +844,7 @@ function renderStandings(){
   }
 }
 
-// ===== 決勝トーナメント表 =====
-const KO_ORDER = [32, 16, 8, 4, 3.5, 0];
+// ===== 決勝トーナメント表（FIFA公式 試合番号ベースの連結ブラケット） =====
 function parseKO(score){
   if(!score) return null;
   const r = { hpk:null, apk:null };
@@ -843,61 +859,122 @@ function parseKO(score){
 }
 // 確定した対戦国かどうか（プレースホルダー文字列でない）
 function isRealTeam(name){
-  return !/組|位|勝者|チーム/.test(name);
+  return !!name && !/組|位|勝者|チーム/.test(name);
 }
-function koTeamRow(name, sc, pk, res, isWin){
+
+// matches.jsonのR32エントリ(日付順16試合) → FIFA試合番号(73〜88)
+const R32_NOS = [73,76,74,75,78,77,79,80,82,81,84,83,85,88,86,87];
+// 各ノードのフィーダー（FIFA試合番号）
+const KO_FEEDERS = {
+  89:[74,77],90:[73,75],91:[76,78],92:[79,80],93:[83,84],94:[81,82],95:[86,88],96:[85,87],
+  97:[89,90],98:[93,94],99:[91,92],100:[95,96],101:[97,98],102:[99,100],104:[101,102]
+};
+// 縦に並べる順序（枝が上下で揃うように）
+const COLS = [
+  {ph:32, nos:[74,77,73,75,83,84,81,82,76,78,79,80,86,88,85,87]},
+  {ph:16, nos:[89,90,93,94,91,92,95,96]},
+  {ph:8,  nos:[97,98,99,100]},
+  {ph:4,  nos:[101,102]},
+  {ph:0,  nos:[104]}
+];
+const COL_NAME = {32:"ラウンド32",16:"ラウンド16",8:"準々決勝",4:"準決勝",0:"決勝"};
+function noToPhase(no){
+  if(no>=73&&no<=88) return 32;
+  if(no>=89&&no<=96) return 16;
+  if(no>=97&&no<=100) return 8;
+  if(no>=101&&no<=102) return 4;
+  if(no===103) return 3.5;
+  return 0;
+}
+// スコアから勝者/敗者を決定（プレースホルダー同士は判定しない）
+function decide(home, away, score){
+  const res = score ? parseKO(score) : null;
+  let winner=null, loser=null;
+  if(res && res.winner && isRealTeam(home) && isRealTeam(away)){
+    winner = res.winner===1 ? home : away;
+    loser  = res.winner===1 ? away : home;
+  }
+  return {home, away, score, res, winner, loser};
+}
+// ノード(FIFA試合番号)を解決して {home,away,score,res,winner,loser,date} を返す
+function resolveNode(no){
+  const phase = noToPhase(no);
+  if(phase===32){
+    const entries = M.filter(m=>m[3]===32);
+    const e = entries[R32_NOS.indexOf(no)];
+    if(!e) return {home:"",away:"",score:null,res:null,winner:null,loser:null,date:""};
+    const d = decide(e[5], e[6], e[9]);
+    d.date = `${e[0]}/${e[1]} ${e[2]}`;
+    return d;
+  }
+  let t1, t2;
+  if(no===103){ // 3位決定戦：準決勝の敗者同士
+    t1 = resolveNode(101).loser; t2 = resolveNode(102).loser;
+  }else{
+    const [f1,f2] = KO_FEEDERS[no];
+    t1 = resolveNode(f1).winner; t2 = resolveNode(f2).winner;
+  }
+  // 両チーム確定済みなら、その対戦のスコアをmatches.jsonから探す
+  let score=null, date="", home=t1, away=t2;
+  if(t1 && t2){
+    const e = M.find(m=>m[3]===phase && ((m[5]===t1&&m[6]===t2)||(m[5]===t2&&m[6]===t1)));
+    if(e){ home=e[5]; away=e[6]; score=e[9]; date=`${e[0]}/${e[1]} ${e[2]}`; }
+  }
+  const d = decide(home||"", away||"", score);
+  d.date = date;
+  return d;
+}
+// ブラケット用の1チーム行
+function bkTeam(name, scoreNum, pk, hasResult, isWin, isLose){
   const real = isRealTeam(name);
-  const nm = name === "日本" ? '<span class="jp-name">日本</span>' : name;
-  const rk = real ? rankTag(name) : '';
-  const cls = !real ? "placeholder" : (!res ? "" : (isWin ? "win" : "lose"));
-  const mark = (res && isWin) ? '<span class="ko-win-mark"></span>' : '';
-  const scHTML = res ? `<span class="ko-sc">${sc}${pk!=null?` <i>(${pk})</i>`:''}</span>` : '';
-  return `<div class="ko-team ${cls}"><span class="ko-name">${mark}${nm}${rk}</span>${scHTML}</div>`;
+  const label = real ? (name==="日本" ? '<span class="jp-name">日本</span>' : name) : `<span class="ph">${name||"&nbsp;"}</span>`;
+  const rk = real ? rankTag(name) : "";
+  const cls = isWin ? "win" : (isLose ? "lose" : "");
+  const sc = hasResult ? `<span class="bk-sc">${scoreNum}${pk!=null?`<i>${pk}</i>`:""}</span>` : "";
+  return `<div class="bk-team ${cls}"><span class="bk-nm">${label}${rk}</span>${sc}</div>`;
+}
+function bkCard(no){
+  const r = resolveNode(no);
+  const phase = noToPhase(no);
+  const has = !!r.res;
+  const jp = r.home==="日本" || r.away==="日本";
+  const hWin = has && r.res.winner===1, aWin = has && r.res.winner===2;
+  const cls = "bk-match" + (phase===0?" final":"") + (jp?" jp":"") + (has?" done":"");
+  const dt = r.date ? `<span class="bk-dt">${r.date}</span>` : `<span class="bk-dt">${COL_NAME[phase]||""}</span>`;
+  return `<div class="${cls}" data-no="${no}">
+    ${dt}
+    ${bkTeam(r.home, has?r.res.hs:"", has?r.res.hpk:null, has, hWin, has&&!hWin)}
+    ${bkTeam(r.away, has?r.res.as:"", has?r.res.apk:null, has, aWin, has&&!aWin)}
+  </div>`;
 }
 function renderBracket(){
   const wrap = document.getElementById("bracketList");
   wrap.innerHTML = "";
 
-  // --- 優勝バナー ---
-  const fin = M.find(m => m[3] === 0);
-  const banner = document.createElement("div");
-  const fp = fin ? parseKO(fin[9]) : null;
-  if(fp && fp.winner){
-    const champ = fp.winner === 1 ? fin[5] : fin[6];
-    banner.className = "champ won";
-    const nm = champ === "日本" ? "🇯🇵 日本" : champ;
-    banner.innerHTML = `<span class="champ-label">★ WORLD CHAMPION ★</span><span class="champ-name">${nm}</span>`;
-  }else{
-    banner.className = "champ";
-    banner.innerHTML = `<span class="champ-label">FIFA World Cup 2026</span><span class="champ-pending">優勝チームは決勝（日本時間 7/20 4:00）で決定</span>`;
+  // --- 連結ブラケット本体 ---
+  const scroll = document.createElement("div");
+  scroll.className = "bracket-scroll";
+  let cols = "";
+  for(const col of COLS){
+    let cells = col.nos.map(no=>`<div class="bk-cell">${bkCard(no)}</div>`).join("");
+    cols += `<div class="bk-col bk-col-${col.ph}"><div class="bk-col-head">${COL_NAME[col.ph]}</div><div class="bk-col-body">${cells}</div></div>`;
   }
-  wrap.appendChild(banner);
+  scroll.innerHTML = `<div class="bracket">${cols}</div>`;
+  wrap.appendChild(scroll);
 
-  // --- ラウンドごとのカード ---
-  for(const ph of KO_ORDER){
-    const matches = M.filter(m => m[3] === ph);
-    if(!matches.length) continue;
-    const head = document.createElement("div");
-    head.className = "ko-round-head";
-    head.innerHTML = `<b>${PHASE_NAME[ph]}</b>`;
-    wrap.appendChild(head);
-
-    for(const m of matches){
-      const res = parseKO(m[9]);
-      const jp = (m[5] === "日本" || m[6] === "日本");
-      const card = document.createElement("article");
-      card.className = "ko-card" + (ph===0?" final":"") + (ph===3.5?" bronze":"") + (jp?" has-jp":"");
-      const dt = `${m[0]}/${m[1]} ${m[2]}`;
-      const note = m[8] ? `<span class="ko-note">${m[8]}</span>` : "";
-      const hWin = res ? res.winner===1 : false;
-      const aWin = res ? res.winner===2 : false;
-      card.innerHTML = `
-        <div class="ko-card-top"><span>${dt}</span>${note || `<span>${STAGE_SHORT[ph]}</span>`}</div>
-        ${koTeamRow(m[5], res?res.hs:"", res?res.hpk:null, !!res, hWin)}
-        ${koTeamRow(m[6], res?res.as:"", res?res.apk:null, !!res, aWin)}`;
-      wrap.appendChild(card);
-    }
-  }
+  // --- 3位決定戦 ---
+  const third = resolveNode(103);
+  const t3 = document.createElement("div");
+  t3.className = "bk-third";
+  const has3 = !!third.res;
+  const jp3 = third.home==="日本"||third.away==="日本";
+  t3.innerHTML = `<div class="bk-third-label">3位決定戦</div>
+    <div class="bk-match bronze${jp3?' jp':''}${has3?' done':''}">
+      <span class="bk-dt">${third.date||"準決勝の敗者同士"}</span>
+      ${bkTeam(third.home, has3?third.res.hs:"", has3?third.res.hpk:null, has3, has3&&third.res.winner===1, has3&&third.res.winner!==1)}
+      ${bkTeam(third.away, has3?third.res.as:"", has3?third.res.apk:null, has3, has3&&third.res.winner===2, has3&&third.res.winner!==2)}
+    </div>`;
+  wrap.appendChild(t3);
 }
 
 // ===== ビュー切り替え（日程／順位／決勝T） =====
