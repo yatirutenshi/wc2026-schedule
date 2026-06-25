@@ -165,6 +165,7 @@ h1 small{display:block;font-weight:700;font-size:.45em;letter-spacing:.18em;opac
 .tvb.fuji{background:#E4002B;color:#fff}
 .tvb.bs{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
 .tvb.dazn{background:#fff;color:#888;border:1px dashed var(--line)}
+.tvb.plan{background:#FFF6DF;color:#9a7b1a;border:1px dashed var(--jp-gold);font-weight:900}
 .terr-mark{
   font-size:9px;font-weight:900;color:#2E7D32;border:1px solid #2E7D32;
   border-radius:3px;padding:1px 4px;letter-spacing:.08em;align-self:center;
@@ -224,6 +225,7 @@ h1 small{display:block;font-weight:700;font-size:.45em;letter-spacing:.18em;opac
 }
 .match.jp .tvb.bs{background:rgba(255,255,255,.14);color:#fff;border-color:transparent}
 .match.jp .tvb.dazn{background:transparent;color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.3)}
+.match.jp .tvb.plan{background:rgba(244,197,66,.2);color:var(--jp-gold);border-color:var(--jp-gold)}
 .match.jp .terr-mark{color:var(--jp-gold);border-color:var(--jp-gold)}
 .match.jp.done{opacity:.55}
 
@@ -656,13 +658,13 @@ const PHASES = [
 const PHASE_NAME = {1:"グループステージ 第1節",2:"グループステージ 第2節",3:"グループステージ 第3節",32:"ラウンド32（ベスト32）",16:"ラウンド16（ベスト16）",8:"準々決勝",4:"準決勝",3.5:"3位決定戦",0:"決勝"};
 const STAGE_SHORT = {1:"第1節",2:"第2節",3:"第3節",32:"R32",16:"R16",8:"準々決勝",4:"準決勝",3.5:"3位決定戦",0:"決勝"};
 const DOW = ["日","月","火","水","木","金","土"];
-const TV_LABEL = {N:["NHK総合","nhk",true],T:["日本テレビ","ntv",true],F:["フジテレビ","fuji",true],B:["NHK BS","bs",false],"4":["NHK BSP4K","bs",false],D:["DAZN","dazn",false]};
+const TV_LABEL = {N:["NHK総合","nhk",true],T:["日本テレビ","ntv",true],F:["フジテレビ","fuji",true],B:["NHK BS","bs",false],"4":["NHK BSP4K","bs",false],D:["DAZN","dazn",false],G:["地上波（予定）","plan",false]};
 
 let state = {phase:"all", groups:new Set(), jpOnly:false, tvOnly:false, view:"schedule"};
 
 function mDate(m){ return new Date(2026, m[0]-1, m[1], +m[2].split(":")[0], +m[2].split(":")[1]); }
 function isJP(m){ return m[5]==="日本" || m[6]==="日本"; }
-function hasTerr(m){ return /[NTF]/.test(m[7]); }
+function hasTerr(m){ return /[NTFG]/.test(m[7]); }
 
 function tvBadges(m){
   let html = "";
